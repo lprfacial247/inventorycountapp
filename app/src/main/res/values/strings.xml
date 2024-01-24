@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">InventoryCountingApp</string>
+
+
+    <string-array name="StoreList">
+        <item>Main Store</item>
+        <item>UK Store</item>
+        <item>UN Store</item>
+    </string-array>
+
+    <string-array name="FloorList">
+        <item>Floor 1</item>
+        <item>Floor 2</item>
+        <item>Floor 3</item>
+    </string-array>
+
+    <string-array name="RoomList">
+        <item>Room 1</item>
+        <item>Room 2</item>
+        <item>Room 3</item>
+    </string-array>
+
+    <string-array name="SectionList">
+        <item>Section 1</item>
+        <item>Section 2</item>
+        <item>Section 3</item>
+    </string-array>
+
+    <string-array name="Units">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>
