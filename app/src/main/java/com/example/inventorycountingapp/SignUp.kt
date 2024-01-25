@@ -3,7 +3,6 @@ package com.example.inventorycountingapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
