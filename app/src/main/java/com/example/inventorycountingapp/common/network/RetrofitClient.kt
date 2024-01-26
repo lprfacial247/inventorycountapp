@@ -1,4 +1,4 @@
-package com.example.inventorycountingapp.network
+package com.example.inventorycountingapp.common.network
 
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor

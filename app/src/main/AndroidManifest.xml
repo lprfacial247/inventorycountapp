@@ -42,7 +42,7 @@
             android:name=".SelectLocationActivity"
             android:exported="false" />
         <activity
-            android:name=".WareHouseActivity"
+            android:name=".wirehouse.WareHouseActivity"
             android:exported="false" />
         <activity
             android:name=".StartScanning"

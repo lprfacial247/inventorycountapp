@@ -1,4 +1,4 @@
-package com.example.inventorycountingapp.login
+package com.example.inventorycountingapp.wirehouse
 
 import androidx.lifecycle.ViewModel
 import com.example.inventorycountingapp.common.network.RetrofitClient
@@ -6,26 +6,26 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel: ViewModel() {
+class WireHouseViewModel: ViewModel() {
 
-    fun login(deviceToken: String, pinCode: String, onSuccess: (String) -> Unit, onFailed: (String) -> Unit) {
+    fun fetchWireHouse(onSuccess: (WirehouseResponse) -> Unit, onFailed: (String) -> Unit) {
         RetrofitClient.getApiClient()
-            .login(deviceToken, pinCode)
-            .enqueue(object : Callback<LoginResponse?> {
+            .fetchWireHouse()
+            .enqueue(object : Callback<WirehouseResponse?> {
                 override fun onResponse(
-                    call: Call<LoginResponse?>,
-                    response: Response<LoginResponse?>
+                    call: Call<WirehouseResponse?>,
+                    response: Response<WirehouseResponse?>
                 ) {
                     if (response.body() != null) {
                         if (response.body()?.status == "success") {
-                            onSuccess.invoke(response.body()?.message.toString())
+                            onSuccess.invoke(response.body()!!)
                         }
                     } else {
                         onFailed.invoke("No response found from server")
                     }
                 }
 
-                override fun onFailure(call: Call<LoginResponse?>, t: Throwable) {
+                override fun onFailure(call: Call<WirehouseResponse?>, t: Throwable) {
                     onFailed.invoke(t.localizedMessage)
                 }
             })
