@@ -33,7 +33,7 @@
             android:name=".ProductWithAllScanning"
             android:exported="false" />
         <activity
-            android:name=".ProductActivity"
+            android:name=".product.ProductActivity"
             android:exported="false" />
         <activity
             android:name=".ScanningActivity"

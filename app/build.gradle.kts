@@ -64,5 +64,7 @@ dependencies {
     debugImplementation ("com.github.chuckerteam.chucker:library:3.5.2")
     releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:3.5.2")
 
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
 
 }

@@ -36,9 +36,7 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(
-
-            R.layout.activity_camera)
+        setContentView(R.layout.activity_camera)
         myContext = this
         capture = findViewById(R.id.capture_beauty_mirror)
         btnSwitch = findViewById(R.id.btnSwitchCameraMain)

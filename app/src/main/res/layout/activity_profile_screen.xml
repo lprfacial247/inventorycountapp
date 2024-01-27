@@ -21,16 +21,16 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_Profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/ic_profile"
+        tools:src="@drawable/ic_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_back" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Alexseenko Vasily"
@@ -48,9 +48,9 @@
         android:text="Product Manager"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/poppins_semibold"
-        app:layout_constraintEnd_toEndOf="@+id/tvName"
-        app:layout_constraintStart_toStartOf="@+id/tvName"
-        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+        app:layout_constraintEnd_toEndOf="@+id/tvUserName"
+        app:layout_constraintStart_toStartOf="@+id/tvUserName"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
 
     <com.google.android.material.card.MaterialCardView
@@ -89,6 +89,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/materialTextView3" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -108,7 +109,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/materialTextView4"
+                android:id="@+id/tvStore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -128,7 +129,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/materialTextView5"
+                android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -147,6 +148,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvJoiningDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -184,6 +186,7 @@
                     android:textSize="18dp" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvConfirmedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"

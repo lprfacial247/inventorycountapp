@@ -36,26 +36,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:text="barcode"
-                android:fontFamily="@font/poppins_medium"
                 app:layout_constraintStart_toStartOf="@+id/iv_back"
                 app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <EditText
                 android:id="@+id/tvBarcode"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center"
-                android:text="763659348056349"
-                android:textColor="@color/black"
                 android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                tools:text="2401161553336"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@id/tv_1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.538"
+
+                app:layout_constraintEnd_toStartOf="@+id/ivSearchByQr"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/tv_1"
-                app:layout_constraintTop_toBottomOf="@id/iv_back"
-                app:layout_constraintVertical_bias="0.466" />
+                />
+
+            <ImageView
+                android:id="@+id/ivSearchByQr"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_sign"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvBarcode"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvBarcode" />
 
             <LinearLayout
                 android:id="@+id/ll_top"
@@ -68,6 +77,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tvBarcode">
 
                 <ImageView
+                    android:id="@+id/ivProductImage"
                     android:layout_width="105dp"
                     android:layout_height="@dimen/_70sdp"
                     android:src="@drawable/ic_image" />
@@ -180,112 +190,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <ScrollView
-        android:id="@+id/recycler"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:listitem="@layout/item_files"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
         app:layout_constraintBottom_toTopOf="@+id/btnSubmit"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/item_click"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_itemDoc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_8sdp"
-                    android:elevation="@dimen/_4sdp"
-                    app:cardCornerRadius="@dimen/_4sdp"
-                    app:contentPadding="@dimen/_8sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/image_doc"
-                            android:layout_width="@dimen/_30sdp"
-                            android:layout_height="@dimen/_30sdp"
-                            android:layout_marginEnd="@dimen/_8sdp"
-                            android:src="@drawable/ic_sprite"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/textDocFileName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10sdp"
-                            android:ellipsize="end"
-                            android:singleLine="true"
-                            android:text="Sprite Can"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            android:fontFamily="@font/poppins_semibold"
-                            app:layout_constraintEnd_toStartOf="@+id/cb_docs_designs"
-                            app:layout_constraintStart_toEndOf="@+id/image_doc"
-                            app:layout_constraintTop_toTopOf="@+id/image_doc" />
-
-                        <TextView
-                            android:id="@+id/textDocsFilesSize"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:text="355ml"
-                            android:fontFamily="@font/poppins_medium"
-                            android:textColor="@color/black"
-                            app:layout_constraintBottom_toBottomOf="@+id/image_doc"
-                            app:layout_constraintEnd_toStartOf="@+id/textDocFileDate"
-                            app:layout_constraintStart_toStartOf="@+id/textDocFileName"
-                            app:layout_constraintTop_toBottomOf="@+id/textDocFileName" />
-
-                        <TextView
-                            android:id="@+id/textDocFileDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" Price"
-                            android:fontFamily="@font/poppins_medium"
-                            android:visibility="visible"
-                            app:layout_constraintBottom_toBottomOf="@+id/textDocsFilesSize"
-                            app:layout_constraintStart_toEndOf="@+id/textDocsFilesSize"
-                            app:layout_constraintTop_toTopOf="@+id/textDocsFilesSize" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/cb_docs_designs"
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:text="12"
-                            android:fontFamily="@font/poppins_semibold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/textDocFileName"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+        tools:listitem="@layout/list_item_product" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSubmit"
@@ -298,6 +209,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler" />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

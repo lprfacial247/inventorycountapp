@@ -7,24 +7,24 @@ data class LoginResponse(
     @SerializedName("data")
     val `data`: Data,
     @SerializedName("message")
-    val message: String,
+    val message: String = "",
     @SerializedName("status")
-    val status: String
+    val status: String = ""
 ) {
     data class Data(
         @SerializedName("created_date")
-        val createdDate: String,
+        val createdDate: String = "",
         @SerializedName("image_path")
-        val imagePath: String,
+        val imagePath: String = "",
         @SerializedName("lst_visit_date_from")
-        val lstVisitDateFrom: String,
+        val lstVisitDateFrom: String = "",
         @SerializedName("lst_visit_date_to")
-        val lstVisitDateTo: String,
+        val lstVisitDateTo: String = "",
         @SerializedName("lst_whouse_index")
-        val lstWhouseIndex: Int,
+        val lstWhouseIndex: Int = 0,
         @SerializedName("user_idx")
-        val userIdx: Int,
+        val userIdx: Int = 0,
         @SerializedName("user_name")
-        val userName: String
+        val userName: String = ""
     )
 }
