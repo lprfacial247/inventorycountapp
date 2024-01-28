@@ -1,4 +1,4 @@
-package com.example.inventorycountingapp
+package com.example.inventorycountingapp.product
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -11,17 +11,25 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.provider.Settings
-import android.view.ViewGroup
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.inventorycountingapp.CameraActivity
+import com.example.inventorycountingapp.ProfileScreen
+import com.example.inventorycountingapp.R
+import com.example.inventorycountingapp.SubmittedSuccessfully
+import com.example.inventorycountingapp.common.load
+import com.example.inventorycountingapp.common.toast
+import com.example.inventorycountingapp.databinding.ActivityProductBinding
+import com.example.inventorycountingapp.login.LoginViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -29,72 +37,137 @@ import com.google.android.material.textview.MaterialTextView
 import com.permissionx.guolindev.PermissionX
 
 class ProductActivity : AppCompatActivity() {
-    lateinit var submit : MaterialButton
-    lateinit var itemClick : LinearLayout
-    lateinit var btnBack : ImageView
-    lateinit var btnOk : ImageView
-    lateinit var quantity : TextInputEditText
-    lateinit var tvAmount : MaterialTextView
+    private lateinit var binding: ActivityProductBinding
     private val REQUEST_PICK_IMAGE = 1
     private val REQUEST_PERMISSION_SETTINGS = 1001
     var PICK_IMAGE: Int = 111
+    private val viewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
+    private var productResponse : ProductResponse ?= null
+    private val adapter by lazy { SelectedProductAdapter() }
+
+
     private val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
         Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
 
-    val storagePermissions33 = arrayOf(
+    private val storagePermissions33 = arrayOf(
         Manifest.permission.CAMERA,
         Manifest.permission.READ_MEDIA_IMAGES
     )
-    val storagePermissions = arrayOf(
+    private val storagePermissions = arrayOf(
         Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_product)
-        submit = findViewById(R.id.btnSubmit)
-        itemClick = findViewById(R.id.item_click)
-        btnBack = findViewById(R.id.iv_back)
-        btnOk = findViewById(R.id.btn_ok)
-        quantity = findViewById(R.id.quantity_num)
-        tvAmount = findViewById(R.id.amount)
+        binding = ActivityProductBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        btnOk.setOnClickListener{
-            val num = quantity.text.toString()
-            tvAmount.setText(num)
+        setupRv()
+        initClicks()
+    }
 
-        }
-        submit.setOnClickListener{
-            val intent  = Intent(this, SubmittedSuccessfully::class.java)
-            startActivity(intent)
-        }
-
-        itemClick.setOnClickListener{
-            showSaveBottomSheet()
-        }
-        btnBack.setOnClickListener{
-            super.onBackPressed()
+    private fun setupRv() {
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.adapter = adapter
+        adapter.onItemClick = {
+            showSaveBottomSheet(it)
         }
     }
 
-    private fun showSaveBottomSheet() {
+    private fun initClicks() {
+        binding.btnOk.setOnClickListener {
+            if (productResponse == null) {
+                "No product found".toast()
+                return@setOnClickListener
+            }
+
+            val inputBarCode = binding.tvBarcode.text.toString()
+            val num = binding.etQuantity.text.toString()
+            productResponse?.data?.defaultQty = num
+
+            val tempList: MutableList<ProductResponse.Data> = ArrayList()
+            for (item in viewModel.selectedList) {
+                if (item.barcode !=  inputBarCode) {
+                    tempList.add(item)
+                }
+            }
+            tempList.add(productResponse!!.data)
+            viewModel.selectedList.clear()
+            viewModel.selectedList.addAll(tempList)
+            adapter.setData(viewModel.selectedList)
+            resetData()
+        }
+        binding.btnSubmit.setOnClickListener {
+            val intent = Intent(this, SubmittedSuccessfully::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.ivBack.setOnClickListener {
+            super.onBackPressed()
+        }
+
+        binding.ivSearchByQr.setOnClickListener {
+            val barCode = binding.tvBarcode.text.toString()
+            viewModel.getProduct(barCode,
+                onSuccess = {
+                    productResponse = it
+                    binding.apply {
+                        ivProductImage.load(it.data.imagePath)
+                        tvName.text = it.data.name
+                        tvQuantity.text = it.data.defaultQty +" pcs, "
+                        tvPricee.text = it.data.salePriceTax
+                        etQuantity.setText(it.data.defaultQty)
+                    }
+
+                },
+                onFailed = {
+                    it.toast()
+                })
+        }
+    }
+
+    private fun resetData() {
+        binding.ivProductImage.load("")
+        binding.tvName.text = ""
+        binding.tvPricee.text = ""
+        binding.tvQuantity.text = ""
+        binding.etQuantity.setText("0")
+        binding.tvBarcode.setText("")
+        productResponse = null
+    }
+
+    private fun showSaveBottomSheet(item: ProductResponse.Data) {
         val bottomSheetDialog = BottomSheetDialog(this)
         val bottomSheetView = layoutInflater.inflate(R.layout.receipt_layout, null)
 
         val addImage: ImageView = bottomSheetView.findViewById(R.id.iv_product)
+        val tvName: TextView = bottomSheetView.findViewById(R.id.tvName)
+        val tvBarcode: TextView = bottomSheetView.findViewById(R.id.tvBarcode)
+        val tvPrice: TextView = bottomSheetView.findViewById(R.id.tvPrice)
+        val tvP: TextView = bottomSheetView.findViewById(R.id.tvP)
         val btnSave: MaterialButton = bottomSheetView.findViewById(R.id.btnSave)
+
+        addImage.load(item.imagePath, R.drawable.ic_default_item)
+        tvName.text = item.name
+        tvBarcode.text = item.barcode
+        tvPrice.text = item.salePriceTax
+        tvP.text = item.saleUnitIdx.toString()
+
         btnSave.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-        addImage.setOnClickListener{
+        addImage.setOnClickListener {
             cameraDialog()
         }
 
         bottomSheetDialog.setContentView(bottomSheetView)
         bottomSheetDialog.show()
     }
+
     private fun cameraDialog() {
         val dialog = Dialog(this)
         val bottomSheetView = layoutInflater.inflate(R.layout.pick_image_dialog, null)
@@ -103,18 +176,19 @@ class ProductActivity : AppCompatActivity() {
         val fromCamera: MaterialButton = bottomSheetView.findViewById(R.id.fromCamera)
 
         fromLaibrary.setOnClickListener {
-            var intent = Intent()
+            val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_PICK
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE)
         }
 
         fromCamera.setOnClickListener {
-            if(ContextCompat.checkSelfPermission(this, readImagePermission) ==
-                PackageManager.PERMISSION_GRANTED){
-                val intent =  Intent(this,CameraActivity::class.java)
+            if (ContextCompat.checkSelfPermission(this, readImagePermission) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                val intent = Intent(this, CameraActivity::class.java)
                 startActivity(intent)
-            }else {
+            } else {
                 val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     storagePermissions33
                 } else {
@@ -162,7 +236,7 @@ class ProductActivity : AppCompatActivity() {
 
 
         dialog.window!!.setLayout(
-            ( WindowManager.LayoutParams.MATCH_PARENT).toInt(),
+            (WindowManager.LayoutParams.MATCH_PARENT).toInt(),
             WindowManager.LayoutParams.WRAP_CONTENT
         )
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -172,9 +246,9 @@ class ProductActivity : AppCompatActivity() {
     private fun saveSuccessfully() {
         val dialog = Dialog(this)
         val bottomSheetView = layoutInflater.inflate(R.layout.temp_dailog, null)
-        val backToHome : MaterialButton = bottomSheetView.findViewById(R.id.btnBackToHome)
-        backToHome.setOnClickListener{
-            val intent  = Intent(this, ProfileScreen::class.java)
+        val backToHome: MaterialButton = bottomSheetView.findViewById(R.id.btnBackToHome)
+        backToHome.setOnClickListener {
+            val intent = Intent(this, ProfileScreen::class.java)
             startActivity(intent)
         }
         dialog.setContentView(bottomSheetView)
