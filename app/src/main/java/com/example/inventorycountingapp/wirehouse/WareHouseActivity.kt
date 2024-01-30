@@ -3,16 +3,14 @@ package com.example.inventorycountingapp.wirehouse
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
-import com.example.inventorycountingapp.R
-import com.example.inventorycountingapp.SelectLocationActivity
+import com.example.inventorycountingapp.common.pref.SpManager
+import com.example.inventorycountingapp.location.SelectLocationActivity
 import com.example.inventorycountingapp.common.toast
-import com.example.inventorycountingapp.databinding.ActivityMainBinding
 import com.example.inventorycountingapp.databinding.ActivityWareHouseBinding
-import com.example.inventorycountingapp.login.LoginViewModel
-import com.google.android.material.button.MaterialButton
 
 class WareHouseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWareHouseBinding
@@ -26,6 +24,7 @@ class WareHouseActivity : AppCompatActivity() {
         fetchData()
 
         binding.selectWareHouseBtn.setOnClickListener {
+
             val intent = Intent(this@WareHouseActivity, SelectLocationActivity::class.java)
             startActivity(intent)
         }
@@ -42,6 +41,18 @@ class WareHouseActivity : AppCompatActivity() {
                 val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeNames)
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 binding.spinner.adapter = adapter
+
+                binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                        val selectedWirehouse = response.data[position]
+                        SpManager.saveInt(this@WareHouseActivity, SpManager.KEY_WIRE_HOUSE_INDEX, selectedWirehouse.index)
+                    }
+
+                    override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                    }
+
+                }
             },
             onFailed = {
                 it.toast()

@@ -8,6 +8,10 @@ import com.google.gson.Gson
 object SpManager {
     private const val PREFERENCES_NAME = "SpManager"
     public const val KEY_USER = "user"
+    public const val KEY_WIRE_HOUSE_INDEX = "wh"
+    public const val KEY_FLOOR_INDEX = "fr"
+    public const val KEY_ROOM_INDEX = "rm"
+    public const val KEY_SECTION_INDEX = "sn"
 
     private fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -44,7 +48,7 @@ object SpManager {
         editor.apply()
     }
 
-    fun getInt(context: Context, key: String?, defaultValue: Int): Int {
+    fun getInt(context: Context, key: String?, defaultValue: Int = 0): Int {
         return getSharedPreferences(context).getInt(key, defaultValue)
     }
 }
