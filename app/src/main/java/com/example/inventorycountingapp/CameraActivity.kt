@@ -1,6 +1,8 @@
 package com.example.inventorycountingapp
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
@@ -173,6 +175,12 @@ class CameraActivity : AppCompatActivity() {
             val uriImage = getImageUri(this, rotatedBitmap)
             intent.putExtra("image_uri", uriImage.toString())
             startActivity(intent)*/
+
+            // Save the rotated bitmap to a file
+            val imageUri = saveBitmapToFile(rotatedBitmap)
+
+            // Finish the activity and send the imageUri to the server
+            finishWithImageResult(imageUri)
         }
     }
 
@@ -217,6 +225,38 @@ class CameraActivity : AppCompatActivity() {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun saveBitmapToFile(bitmap: Bitmap): Uri {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+
+        // Generate unique file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val fileName = "IMG_$timeStamp.jpg"
+
+        // Get the external storage directory
+        val storageDir: File? = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val imageFile = File(storageDir, fileName)
+
+        try {
+            FileOutputStream(imageFile).apply {
+                write(bytes.toByteArray())
+                flush()
+                close()
+            }
+            return Uri.fromFile(imageFile)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            throw RuntimeException("Error saving image to file.")
+        }
+    }
+
+    private fun finishWithImageResult(imageUri: Uri) {
+        val resultIntent = Intent()
+        resultIntent.putExtra("image_uri", imageUri.toString())
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
     }
 
 }

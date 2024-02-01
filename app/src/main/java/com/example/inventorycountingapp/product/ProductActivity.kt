@@ -2,6 +2,7 @@ package com.example.inventorycountingapp.product
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,6 +20,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +29,7 @@ import com.example.inventorycountingapp.CameraActivity
 import com.example.inventorycountingapp.ProfileScreen
 import com.example.inventorycountingapp.R
 import com.example.inventorycountingapp.SubmittedSuccessfully
+import com.example.inventorycountingapp.common.dialog.NoProductDialog
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.common.toast
 import com.example.inventorycountingapp.databinding.ActivityProductBinding
@@ -59,6 +63,11 @@ class ProductActivity : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
+    private lateinit var cameraActivityLauncher: ActivityResultLauncher<Intent>
+    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+    private var addImage: ImageView ?= null
+
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +76,32 @@ class ProductActivity : AppCompatActivity() {
 
         setupRv()
         initClicks()
+        imageLauncher()
+    }
+
+    private fun imageLauncher() {
+        cameraActivityLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val data: Intent? = result.data
+                    val imageUri = data?.getStringExtra("image_uri")
+                    if (addImage != null && imageUri != null) {
+                        addImage?.load(imageUri)
+                    }
+
+                }
+            }
+
+        pickImageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val data: Intent? = result.data
+                    val selectedImageUri: Uri? = data?.data
+                    if (addImage != null && selectedImageUri != null) {
+                        addImage?.load(selectedImageUri)
+                    }
+                }
+            }
     }
 
     private fun setupRv() {
@@ -120,12 +155,19 @@ class ProductActivity : AppCompatActivity() {
                         tvName.text = it.data.name
                         tvQuantity.text = it.data.defaultQty +" pcs, "
                         tvPricee.text = it.data.salePriceTax
-                        etQuantity.setText(it.data.defaultQty)
+                        if (it.data.defaultQty.toDouble() == 0.0) {
+                            etQuantity.setText("1")
+                        }
+                        else {
+                            etQuantity.setText(it.data.defaultQty)
+                        }
+
                     }
 
                 },
                 onFailed = {
-                    it.toast()
+                    val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
+                    customDialog.show()
                 })
         }
     }
@@ -144,14 +186,14 @@ class ProductActivity : AppCompatActivity() {
         val bottomSheetDialog = BottomSheetDialog(this)
         val bottomSheetView = layoutInflater.inflate(R.layout.receipt_layout, null)
 
-        val addImage: ImageView = bottomSheetView.findViewById(R.id.iv_product)
+        addImage = bottomSheetView.findViewById(R.id.iv_product)
         val tvName: TextView = bottomSheetView.findViewById(R.id.tvName)
         val tvBarcode: TextView = bottomSheetView.findViewById(R.id.tvBarcode)
         val tvPrice: TextView = bottomSheetView.findViewById(R.id.tvPrice)
         val tvP: TextView = bottomSheetView.findViewById(R.id.tvP)
         val btnSave: MaterialButton = bottomSheetView.findViewById(R.id.btnSave)
 
-        addImage.load(item.imagePath, R.drawable.ic_default_item)
+        addImage?.load(item.imagePath, R.drawable.ic_default_item)
         tvName.text = item.name
         tvBarcode.text = item.barcode
         tvPrice.text = item.salePriceTax
@@ -160,7 +202,7 @@ class ProductActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-        addImage.setOnClickListener {
+        addImage?.setOnClickListener {
             cameraDialog()
         }
 
@@ -179,7 +221,8 @@ class ProductActivity : AppCompatActivity() {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_PICK
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE)
+            pickImageLauncher.launch(intent)
+            dialog.dismiss()
         }
 
         fromCamera.setOnClickListener {
@@ -187,7 +230,8 @@ class ProductActivity : AppCompatActivity() {
                 PackageManager.PERMISSION_GRANTED
             ) {
                 val intent = Intent(this, CameraActivity::class.java)
-                startActivity(intent)
+                cameraActivityLauncher.launch(intent)
+                dialog.dismiss()
             } else {
                 val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     storagePermissions33

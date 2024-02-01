@@ -68,15 +68,7 @@ If there is no location information in the list.\nyou can manually enter a new l
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
-    <View
-        android:layout_width="2dp"
-        android:layout_height="0dp"
-        android:background="#403E3E"
-        android:layout_marginStart="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
-        app:layout_constraintTop_toTopOf="@id/spinner"
-        app:layout_constraintBottom_toBottomOf="@id/spinner"
-        app:layout_constraintEnd_toStartOf="@id/spinner"/>
+
 
     <Spinner
         android:id="@+id/spinner"
@@ -113,15 +105,7 @@ If there is no location information in the list.\nyou can manually enter a new l
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/roomSpinner"/>
 
-    <View
-        android:layout_width="2dp"
-        android:layout_height="0dp"
-        android:background="#403E3E"
-        android:layout_marginStart="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
-        app:layout_constraintTop_toTopOf="@id/roomSpinner"
-        app:layout_constraintBottom_toBottomOf="@id/roomSpinner"
-        app:layout_constraintEnd_toStartOf="@id/roomSpinner"/>
+
 
     <Spinner
         android:id="@+id/roomSpinner"
@@ -157,15 +141,7 @@ If there is no location information in the list.\nyou can manually enter a new l
         app:layout_constraintTop_toBottomOf="@id/roomSpinner"
         app:layout_constraintBottom_toTopOf="@id/sectionSpinner"/>
 
-    <View
-        android:layout_width="2dp"
-        android:layout_height="0dp"
-        android:background="#403E3E"
-        android:layout_marginStart="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
-        app:layout_constraintTop_toTopOf="@id/sectionSpinner"
-        app:layout_constraintBottom_toBottomOf="@id/sectionSpinner"
-        app:layout_constraintEnd_toStartOf="@id/sectionSpinner"/>
+
 
     <Spinner
         android:id="@+id/sectionSpinner"
