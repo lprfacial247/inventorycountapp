@@ -45,6 +45,9 @@ class SelectLocationActivity : AppCompatActivity() {
 
 
     private fun fetchData() {
+//        binding.spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, emptyList<String>())
+//        binding.roomSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, emptyList<String>())
+//        binding.sectionSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, emptyList<String>())
         viewModel.fetchFloor(wireHouseId,
             onSuccess = { response ->
                 val storeNames = response.data.map { it.name }
