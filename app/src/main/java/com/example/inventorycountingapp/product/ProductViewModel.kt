@@ -21,6 +21,9 @@ class ProductViewModel: ViewModel() {
                         if (response.body()?.status == "success") {
                             onSuccess.invoke(response.body()!!)
                         }
+                        else {
+                            onFailed.invoke("The product information is not in the server. So it can not process for that product. Sorry.")
+                        }
                     } else {
                         onFailed.invoke("No response found from server")
                     }

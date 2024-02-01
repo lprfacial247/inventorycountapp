@@ -1,4 +1,4 @@
-package com.example.inventorycountingapp
+package com.example.inventorycountingapp.product
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -10,27 +10,22 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.provider.Settings
-import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.inventorycountingapp.CameraActivity
+import com.example.inventorycountingapp.R
+import com.example.inventorycountingapp.SubmittedSuccessfully
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.common.toast
-import com.example.inventorycountingapp.databinding.ActivityProductBinding
 import com.example.inventorycountingapp.databinding.ActivityProductWithAllScanningBinding
-import com.example.inventorycountingapp.product.ProductResponse
-import com.example.inventorycountingapp.product.ProductViewModel
-import com.example.inventorycountingapp.product.SelectedProductAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.permissionx.guolindev.PermissionX

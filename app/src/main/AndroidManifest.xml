@@ -48,7 +48,7 @@
             android:name=".SubmittedSuccessfully"
             android:exported="false" />
         <activity
-            android:name=".ProductWithAllScanning"
+            android:name=".product.ProductWithAllScanning"
             android:exported="false" />
         <activity
             android:name=".product.ProductActivity"
