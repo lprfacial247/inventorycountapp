@@ -111,7 +111,8 @@ However, the warehouse location must already\nbe registered in the POS system"
                 app:layout_constraintStart_toStartOf="@id/firstTxt"
                 app:layout_constraintEnd_toEndOf="@id/firstTxt"/>
 
-            <ImageView
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/mapView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="10dp"
