@@ -2,6 +2,7 @@ package com.example.inventorycountingapp
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -57,9 +58,14 @@ class ScanningActivity : AppCompatActivity() {
                 chkWithCOunt.isSelected = true
                 chkWithOutCOunt.isChecked = false
                 chkWithOutCOunt.isSelected = false
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#D5D3D3"))
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+
             } else {
                 chkWithCOunt.isChecked = false
                 chkWithCOunt.isSelected = false
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         })
 
@@ -69,9 +75,13 @@ class ScanningActivity : AppCompatActivity() {
                 chkWithCOunt.isSelected = true
                 chkWithOutCOunt.isChecked = false
                 chkWithOutCOunt.isSelected = false
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#D5D3D3"))
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             } else {
                 chkWithCOunt.isChecked = false
                 chkWithCOunt.isSelected = false
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         })
 
@@ -82,9 +92,13 @@ class ScanningActivity : AppCompatActivity() {
                 chkWithOutCOunt.isSelected = true
                 chkWithCOunt.isChecked = false
                 chkWithCOunt.isSelected = false
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#D5D3D3"))
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             } else {
                 chkWithOutCOunt.isChecked = false
                 chkWithOutCOunt.isSelected = false
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         })
 
@@ -94,9 +108,13 @@ class ScanningActivity : AppCompatActivity() {
                 chkWithOutCOunt.isSelected = true
                 chkWithCOunt.isChecked = false
                 chkWithCOunt.isSelected = false
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#D5D3D3"))
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             } else {
                 chkWithOutCOunt.isChecked = false
                 chkWithOutCOunt.isSelected = false
+                cardChkWithOutCOunt.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
+                cardChkWithCount.setCardBackgroundColor(Color.parseColor("#FFFFFF"))
             }
         })
     }
