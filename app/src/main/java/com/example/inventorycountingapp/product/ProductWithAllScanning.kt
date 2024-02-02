@@ -30,6 +30,7 @@ import com.example.inventorycountingapp.CameraActivity
 import com.example.inventorycountingapp.R
 import com.example.inventorycountingapp.SubmittedSuccessfully
 import com.example.inventorycountingapp.common.dialog.NoProductDialog
+import com.example.inventorycountingapp.common.dialog.ProductDeleteDialog
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.common.toast
 import com.example.inventorycountingapp.databinding.ActivityProductWithAllScanningBinding
@@ -138,7 +139,7 @@ class ProductWithAllScanning : AppCompatActivity() {
                         viewModel.selectedList.add(productResponse!!.data)
                     }
 
-                    viewModel.selectedList.reverse()
+//                    viewModel.selectedList.reverse()
                     adapter.setData(viewModel.selectedList)
                     adapter.notifyDataSetChanged()
                 } else {
@@ -163,8 +164,18 @@ class ProductWithAllScanning : AppCompatActivity() {
         binding.rv.layoutManager = LinearLayoutManager(this)
         binding.rv.adapter = adapter
         adapter.onItemClick = {
-            showSaveBottomSheet(it)
+            showDeleteDialog(it)
         }
+    }
+
+    private fun showDeleteDialog(it: ProductResponse.Data) {
+        val customDialog = ProductDeleteDialog(this, it,
+            onDelete = {
+                viewModel.selectedList.remove(it)
+                adapter.setData(viewModel.selectedList)
+                adapter.notifyDataSetChanged()
+            })
+        customDialog.show()
     }
 
     private fun showSaveBottomSheet(item: ProductResponse.Data) {

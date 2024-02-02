@@ -23,5 +23,6 @@ fun ImageView.load(imageUrl: String, errorDrawable: Int) {
     Glide.with(this.context)
         .load(imageUrl)
         .error(errorDrawable)
+        .placeholder(errorDrawable)
         .into(this)
 }

@@ -34,6 +34,7 @@ import com.example.inventorycountingapp.R
 import com.example.inventorycountingapp.SubmittedSuccessfully
 import com.example.inventorycountingapp.common.dialog.Loader
 import com.example.inventorycountingapp.common.dialog.NoProductDialog
+import com.example.inventorycountingapp.common.dialog.ProductDeleteDialog
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.common.toast
 import com.example.inventorycountingapp.databinding.ActivityProductBinding
@@ -102,7 +103,7 @@ class ProductActivity : AppCompatActivity() {
         binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setUpScanner()
+//        setUpScanner()
         setupRv()
         initClicks()
         imageLauncher()
@@ -147,8 +148,19 @@ class ProductActivity : AppCompatActivity() {
         binding.rv.layoutManager = LinearLayoutManager(this)
         binding.rv.adapter = adapter
         adapter.onItemClick = {
-            showSaveBottomSheet(it)
+            showDeleteDialog(it)
+            //showSaveBottomSheet(it)
         }
+    }
+
+    private fun showDeleteDialog(it: ProductResponse.Data) {
+        val customDialog = ProductDeleteDialog(this, it,
+            onDelete = {
+                viewModel.selectedList.remove(it)
+                adapter.setData(viewModel.selectedList)
+                adapter.notifyDataSetChanged()
+            })
+        customDialog.show()
     }
 
     private fun initClicks() {
@@ -171,7 +183,7 @@ class ProductActivity : AppCompatActivity() {
             tempList.add(productResponse!!.data)
             viewModel.selectedList.clear()
             viewModel.selectedList.addAll(tempList)
-            viewModel.selectedList.reverse()
+//            viewModel.selectedList.reverse()
             adapter.setData(viewModel.selectedList)
             resetData()
         }
@@ -180,10 +192,10 @@ class ProductActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-//        binding.ivSearchByQr.setOnClickListener {
-//            val barCode = binding.tvBarcode.text.toString()
-//            fetchProductInformation(barCode)
-//        }
+        binding.ivSearchByQr.setOnClickListener {
+            val barCode = binding.etBarcode.text.toString()
+            fetchProductInformation(barCode)
+        }
     }
 
     private fun fetchProductInformation(barCode: String) {
@@ -192,14 +204,13 @@ class ProductActivity : AppCompatActivity() {
             onSuccess = {
                 productResponse = it
                 binding.apply {
-                    ivProductImage.load(it.data.imagePath)
+                    ivProductImage.load(it.data.imagePath, R.drawable.ic_default_item)
                     tvName.text = it.data.name
                     tvQuantity.text = it.data.defaultQty + " pcs, "
                     tvPricee.text = it.data.salePriceTax
                     if (it.data.defaultQty.toDouble() == 0.0) {
                         etQuantity.setText("1")
-                    }
-                    else {
+                    } else {
                         etQuantity.setText(it.data.defaultQty)
                     }
                 }

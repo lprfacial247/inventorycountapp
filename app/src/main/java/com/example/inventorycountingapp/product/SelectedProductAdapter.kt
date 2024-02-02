@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.inventorycountingapp.R
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.databinding.ListItemProductBinding
 
@@ -46,7 +47,7 @@ class SelectedProductAdapter : RecyclerView.Adapter<SelectedProductAdapter.MyVie
 
         fun bind(item: ProductResponse.Data) {
             binding.apply {
-                ivProductImage.load(item.imagePath)
+                ivProductImage.load(item.imagePath, R.drawable.ic_default_item)
                 tvName.text = item.name
                 tvQuantity.text = item.defaultQty
                 tvPricee.text = item.salePriceTax
