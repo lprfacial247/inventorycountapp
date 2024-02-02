@@ -40,8 +40,9 @@ class ProfileScreen : AppCompatActivity() {
                 .load(user.imagePath)
                 .error(R.drawable.ic_profile_user)
                 .into(ivProfile)
+            tvTitle.text = user.userRole
             tvUserName.text = user.userName
-            tvName.text = user.userName
+            tvName.text = user.lstUser
             tvToDate.text = "To   " + user.lstVisitDateTo
             tvFromDate.text = "From "+ user.lstVisitDateFrom
         }

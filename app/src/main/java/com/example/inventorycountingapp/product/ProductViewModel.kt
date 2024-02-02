@@ -9,10 +9,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ProductViewModel: ViewModel() {
+class ProductViewModel : ViewModel() {
     val selectedList: MutableList<ProductResponse.Data> by lazy { ArrayList() }
 
-    fun getProduct(barCode: String, onSuccess: (ProductResponse) -> Unit, onFailed: (String) -> Unit) {
+    fun getProduct(
+        barCode: String,
+        onSuccess: (ProductResponse) -> Unit,
+        onFailed: (String) -> Unit
+    ) {
         RetrofitClient.getApiClient()
             .getProduct(barCode)
             .enqueue(object : Callback<ProductResponse?> {
@@ -23,8 +27,7 @@ class ProductViewModel: ViewModel() {
                     if (response.body() != null) {
                         if (response.body()?.status == "success") {
                             onSuccess.invoke(response.body()!!)
-                        }
-                        else {
+                        } else {
                             onFailed.invoke("The product information is not in the server. So it can not process for that product. Sorry.")
                         }
                     } else {
@@ -39,7 +42,13 @@ class ProductViewModel: ViewModel() {
     }
 
 
-    fun updateProductImage(productIdx: RequestBody, fileName: RequestBody, file: MultipartBody.Part, onSuccess: (String) -> Unit, onFailed: (String) -> Unit) {
+    fun updateProductImage(
+        productIdx: RequestBody,
+        fileName: RequestBody,
+        file: MultipartBody.Part,
+        onSuccess: (String) -> Unit,
+        onFailed: (String) -> Unit
+    ) {
         RetrofitClient.getApiClient()
             .updateProductImage(productIdx, fileName, file)
             .enqueue(object : Callback<ApiResponse?> {
@@ -50,8 +59,7 @@ class ProductViewModel: ViewModel() {
                     if (response.body() != null) {
                         if (response.body()?.status == "success") {
                             onSuccess.invoke("Image Changed")
-                        }
-                        else {
+                        } else {
                             onFailed.invoke("Failed")
                         }
                     } else {
@@ -61,7 +69,41 @@ class ProductViewModel: ViewModel() {
 
                 override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
                     onFailed.invoke(t.localizedMessage)
-                    Log.e("ApiOnFailure", "onFailure: "+ t.localizedMessage)
+                    Log.e("ApiOnFailure", "onFailure: " + t.localizedMessage)
+                }
+            })
+    }
+
+    fun submitScanningResult(
+        userId: Int,
+        wireHouseIndex: Int,
+        floorIndex: Int,
+        roomIndex: Int,
+        sectionIndex: Int,
+        deviceToken: String,
+        scanData: String, onSuccess: (String) -> Unit, onFailed: (String) -> Unit
+    ) {
+        RetrofitClient.getApiClient()
+            .submitScanningResult(userId, wireHouseIndex, floorIndex, roomIndex, sectionIndex, deviceToken, scanData)
+            .enqueue(object : Callback<ApiResponse?> {
+                override fun onResponse(
+                    call: Call<ApiResponse?>,
+                    response: Response<ApiResponse?>
+                ) {
+                    if (response.body() != null) {
+                        if (response.body()?.status == "success") {
+                            onSuccess.invoke("Data Submitted")
+                        } else {
+                            onFailed.invoke("Failed")
+                        }
+                    } else {
+                        onFailed.invoke("No response found from server")
+                    }
+                }
+
+                override fun onFailure(call: Call<ApiResponse?>, t: Throwable) {
+                    onFailed.invoke(t.localizedMessage)
+                    Log.e("ApiOnFailure", "onFailure: " + t.localizedMessage)
                 }
             })
     }

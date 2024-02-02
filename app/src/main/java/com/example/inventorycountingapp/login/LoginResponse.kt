@@ -25,6 +25,12 @@ data class LoginResponse(
         @SerializedName("user_idx")
         val userIdx: Int = 0,
         @SerializedName("user_name")
-        val userName: String = ""
+        val userName: String = "",
+        @SerializedName("lst_user")
+        val lstUser: String = "",
+        @SerializedName("user_role")
+        val userRole: String = ""
+
+
     )
 }

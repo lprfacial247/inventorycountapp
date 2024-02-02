@@ -61,4 +61,17 @@ interface ApiService {
         @Part file: MultipartBody.Part
     ): Call<ApiResponse>
 
+
+    @FormUrlEncoded
+    @POST("api-submit-scan-result")
+    fun submitScanningResult(
+        @Field("user_idx") userId: Int,
+        @Field("warehouse_idx") wireHouseIndex: Int,
+        @Field("floor_idx") floorIndex: Int,
+        @Field("room_idx") roomIndex: Int,
+        @Field("section_idx") sectionIndex: Int,
+        @Field("device_token") deviceToken: String,
+        @Field("scan_data") scanData: String,
+    ): Call<ApiResponse>
+
 }

@@ -6,6 +6,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.inventorycountingapp.app.MyApplication
+import com.example.inventorycountingapp.product.ProductResponse
+import com.example.inventorycountingapp.product.TransformedData
 
 fun String.toast() {
     Toast.makeText(MyApplication.appContext, this, Toast.LENGTH_SHORT).show()
@@ -25,4 +27,13 @@ fun ImageView.load(imageUrl: String, errorDrawable: Int) {
         .error(errorDrawable)
         .placeholder(errorDrawable)
         .into(this)
+}
+
+fun convertToTransformedList(dataList: List<ProductResponse.Data>): List<TransformedData> {
+    return dataList.map { data ->
+        TransformedData(
+            product_idx = data.index,
+            quantity = data.defaultQty.toFloatOrNull() ?: 0.0f
+        )
+    }
 }

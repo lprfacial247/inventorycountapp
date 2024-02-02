@@ -63,6 +63,7 @@
         android:layout_marginLeft="@dimen/_20sdp"
         android:layout_marginRight="@dimen/_20sdp"
         app:cardCornerRadius="5dp"
+        android:layout_marginTop="@dimen/_5sdp"
         app:contentPaddingLeft="@dimen/_20sdp"
         app:contentPaddingRight="@dimen/_20sdp"
         app:contentPaddingTop="@dimen/_5sdp"
