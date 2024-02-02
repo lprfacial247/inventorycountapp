@@ -3,13 +3,19 @@ package com.example.inventorycountingapp.product
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.hardware.ScanDevice
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Vibrator
 import android.provider.Settings
 import android.view.Window
 import android.view.WindowManager
@@ -37,8 +43,6 @@ class ProductWithAllScanning : AppCompatActivity() {
     private val viewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
     private val adapter by lazy { SelectedProductAdapter() }
     lateinit var submit: MaterialButton
-    lateinit var btnBack: ImageView
-    private val REQUEST_PICK_IMAGE = 1
     private val REQUEST_PERMISSION_SETTINGS = 1001
     var PICK_IMAGE: Int = 111
     private val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -54,7 +58,36 @@ class ProductWithAllScanning : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
+    private var mScanDevice: ScanDevice? = null
+    private var mmediaplayer: MediaPlayer? = null
+    private var mvibrator: Vibrator? = null
+
     private var productResponse : ProductResponse ?= null
+
+    private val mScanDataReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            // TODO Auto-generated method stub
+            val action = intent.action
+            if (action == "ACTION_BAR_SCAN") {
+                val str = intent.getStringExtra("EXTRA_SCAN_DATA")
+                if (str != null) {
+                    mmediaplayer!!.start();
+                    mvibrator!!.vibrate(150)
+                    binding.etBarcode.setText(str)
+                    fetchProductInformation(str)
+                }
+                else{
+                    resetData()
+                }
+
+            }
+        }
+    }
+
+    private fun resetData() {
+        binding.etBarcode.setText("")
+        productResponse = null
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,10 +96,9 @@ class ProductWithAllScanning : AppCompatActivity() {
         setContentView(binding.root)
 
         submit = findViewById(R.id.btnSubmit)
-        btnBack = findViewById(R.id.iv_back)
 
         setupRv()
-
+        setUpScanner()
 
         submit.setOnClickListener {
             val intent = Intent(this, SubmittedSuccessfully::class.java)
@@ -235,5 +267,34 @@ class ProductWithAllScanning : AppCompatActivity() {
         val bottomSheetView = layoutInflater.inflate(R.layout.temp_dailog, null)
         dialog.setContentView(bottomSheetView)
         dialog.show()
+    }
+
+    override fun onPause() {
+        // TODO Auto-generated method stub
+        super.onPause()
+        if (mScanDevice != null) {
+            mScanDevice!!.stopScan()
+        }
+        unregisterReceiver(mScanDataReceiver)
+    }
+
+
+    // Registered Data Broadcasting
+    override fun onResume() {
+        // TODO Auto-generated method stub
+        val scanDataIntentFilter = IntentFilter()
+        scanDataIntentFilter.addAction("ACTION_BAR_SCAN")
+        registerReceiver(mScanDataReceiver, scanDataIntentFilter)
+        super.onResume()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mScanDevice != null) {
+            mScanDevice!!.closeScan()
+            mScanDevice = null
+            mmediaplayer!!.release()
+        }
     }
 }
