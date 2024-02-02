@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".location.SelectLocationActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/iv_back"
+                android:src="@drawable/back_arrow"
+                android:padding="@dimen/_5sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Location"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolBar" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="You can select detailed location Information for\n products stored in the warehouse.\n
+If there is no location information in the list.\nyou can manually enter a new location name."
+        app:layout_constraintEnd_toEndOf="@id/heading"
+        app:layout_constraintStart_toStartOf="@id/heading"
+        app:layout_constraintTop_toBottomOf="@+id/toolBar" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/selectLevelFloorTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/_17sdp"
+        android:paddingStart="10dp"
+        android:text="Level/Floor"
+        app:layout_constraintBottom_toTopOf="@id/spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description" />
+
+
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:entries="@array/FloorList"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="@id/selectLevelFloorTxt"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/selectLevelFloorTxt"
+        app:layout_constraintTop_toBottomOf="@id/selectLevelFloorTxt" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#C5BDBD"
+        app:layout_constraintTop_toBottomOf="@id/spinner"
+        app:layout_constraintStart_toStartOf="@id/spinner"
+        app:layout_constraintEnd_toEndOf="@id/spinner"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/selectRoomTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="25dp"
+        android:textSize="@dimen/_17sdp"
+        android:layout_marginEnd="10dp"
+        android:paddingStart="10dp"
+        android:text="Room"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/roomSpinner"/>
+
+
+
+    <Spinner
+        android:id="@+id/roomSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:entries="@array/RoomList"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="@id/selectRoomTxt"
+        app:layout_constraintStart_toStartOf="@id/selectRoomTxt"
+        app:layout_constraintTop_toBottomOf="@id/selectRoomTxt" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#C5BDBD"
+        app:layout_constraintTop_toBottomOf="@id/roomSpinner"
+        app:layout_constraintStart_toStartOf="@id/roomSpinner"
+        app:layout_constraintEnd_toEndOf="@id/roomSpinner"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/selectSectionTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="10dp"
+        android:paddingStart="10dp"
+        android:text="Section"
+        android:textSize="@dimen/_17sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/roomSpinner"
+        app:layout_constraintBottom_toTopOf="@id/sectionSpinner"/>
+
+
+
+    <Spinner
+        android:id="@+id/sectionSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:entries="@array/SectionList"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="@id/selectSectionTxt"
+        app:layout_constraintStart_toStartOf="@id/selectSectionTxt"
+        app:layout_constraintTop_toBottomOf="@id/selectSectionTxt" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#C5BDBD"
+        app:layout_constraintTop_toBottomOf="@id/sectionSpinner"
+        app:layout_constraintStart_toStartOf="@id/sectionSpinner"
+        app:layout_constraintEnd_toEndOf="@id/sectionSpinner"/>
+
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/selectLocationBtn"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginHorizontal="20dp"
+        android:backgroundTint="@color/buttonColor"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Select Location"
+        android:textSize="19dp"
+        app:layout_constraintStart_toStartOf="@id/sectionSpinner"
+        app:layout_constraintEnd_toEndOf="@id/sectionSpinner"
+        app:layout_constraintTop_toBottomOf="@id/sectionSpinner"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
