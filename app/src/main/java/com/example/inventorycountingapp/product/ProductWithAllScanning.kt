@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.inventorycountingapp.CameraActivity
 import com.example.inventorycountingapp.R
 import com.example.inventorycountingapp.SubmittedSuccessfully
+import com.example.inventorycountingapp.common.dialog.NoProductDialog
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.common.toast
 import com.example.inventorycountingapp.databinding.ActivityProductWithAllScanningBinding
@@ -77,7 +78,7 @@ class ProductWithAllScanning : AppCompatActivity() {
         }
 
         binding.ivSearchByQr.setOnClickListener {
-            val barCode = binding.tvBarcode.text.toString()
+            val barCode = binding.etBarcode.text.toString()
             viewModel.getProduct(barCode,
                 onSuccess = {
                     productResponse = it
@@ -93,8 +94,22 @@ class ProductWithAllScanning : AppCompatActivity() {
                     }
 
                     val inputBarCode = binding.tvBarcode.text.toString()
+                    val existingItem = viewModel.selectedList.find { it.barcode == barCode }
 
-                    val tempList: MutableList<ProductResponse.Data> = ArrayList()
+                    if (existingItem != null) {
+                        // Item with the same barcode already exists, increase the default quantity
+                        existingItem.defaultQty = (existingItem.defaultQty.toDouble() + 1).toString()
+                    } else {
+                        // Item with the same barcode not found, add the new item to the list
+                        viewModel.selectedList.add(productResponse!!.data)
+                    }
+
+                    // Update the adapter with the modified or new list
+                    adapter.setData(viewModel.selectedList)
+                    adapter.notifyDataSetChanged()
+
+
+     /*               val tempList: MutableList<ProductResponse.Data> = ArrayList()
                     for (item in viewModel.selectedList) {
                         if (item.barcode !=  inputBarCode) {
                             tempList.add(item)
@@ -103,11 +118,12 @@ class ProductWithAllScanning : AppCompatActivity() {
                     tempList.add(productResponse!!.data)
                     viewModel.selectedList.clear()
                     viewModel.selectedList.addAll(tempList)
-                    adapter.setData(viewModel.selectedList)
+                    adapter.setData(viewModel.selectedList)*/
 
                 },
                 onFailed = {
-                    it.toast()
+                    val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
+                    customDialog.show()
                 })
         }
     }
