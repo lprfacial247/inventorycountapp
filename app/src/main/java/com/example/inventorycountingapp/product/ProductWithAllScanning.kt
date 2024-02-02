@@ -105,49 +105,58 @@ class ProductWithAllScanning : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnBack.setOnClickListener {
-            super.onBackPressed()
-        }
-
         binding.ivSearchByQr.setOnClickListener {
             val barCode = binding.etBarcode.text.toString()
-            viewModel.getProduct(barCode,
-                onSuccess = {
-                    productResponse = it
-                    if (productResponse != null) {
-                        binding.apply {
-                            ivProductImage.load(it.data.imagePath)
-                            tvName.text = it.data.name
-                            tvQuantity.text = it.data.defaultQty + " pcs, "
-                            tvPricee.text = it.data.salePriceTax
-                        }
-
-
-                        if (productResponse!!.data.defaultQty.toDouble() == 0.0) {
-                            productResponse!!.data.defaultQty = "1"
-                        }
-
-                        val existingItem = viewModel.selectedList.find { it.barcode == barCode }
-
-                        if (existingItem != null) {
-                            existingItem.defaultQty = (existingItem.defaultQty.toDouble() + 1).toString()
-                        } else {
-                            viewModel.selectedList.add(productResponse!!.data)
-                        }
-
-                        viewModel.selectedList.reverse()
-                        adapter.setData(viewModel.selectedList)
-                        adapter.notifyDataSetChanged()
-                    }
-                    else {
-                        "No product found".toast()
-                    }
-                },
-                onFailed = {
-                    val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
-                    customDialog.show()
-                })
+            fetchProductInformation(barCode)
         }
+    }
+
+    private fun fetchProductInformation(barCode: String) {
+        viewModel.getProduct(
+            barCode,
+            onSuccess = {
+                productResponse = it
+                if (productResponse != null) {
+                    binding.apply {
+                        ivProductImage.load(it.data.imagePath)
+                        tvName.text = it.data.name
+                        tvQuantity.text = it.data.defaultQty + " pcs, "
+                        tvPricee.text = it.data.salePriceTax
+                    }
+
+
+                    if (productResponse!!.data.defaultQty.toDouble() == 0.0) {
+                        productResponse!!.data.defaultQty = "1"
+                    }
+
+                    val existingItem = viewModel.selectedList.find { it.barcode == barCode }
+
+                    if (existingItem != null) {
+                        existingItem.defaultQty =
+                            (existingItem.defaultQty.toDouble() + 1).toString()
+                    } else {
+                        viewModel.selectedList.add(productResponse!!.data)
+                    }
+
+                    viewModel.selectedList.reverse()
+                    adapter.setData(viewModel.selectedList)
+                    adapter.notifyDataSetChanged()
+                } else {
+                    "No product found".toast()
+                }
+            },
+            onFailed = {
+                val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
+                customDialog.show()
+            })
+    }
+
+    private fun setUpScanner() {
+        mScanDevice = ScanDevice(this) //初始化接口  Initialization interface
+        mvibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator // motor
+        mmediaplayer = MediaPlayer() //   Initialize sound
+        mmediaplayer = MediaPlayer.create(this, R.raw.scanok)
+        mmediaplayer!!.isLooping = false
     }
 
     private fun setupRv() {
