@@ -78,23 +78,38 @@ class SelectLocationActivity : AppCompatActivity() {
     private fun fetchRooms(floorIndex: Int) {
         viewModel.fetchRoom(wireHouseId, floorIndex,
             onSuccess = { response ->
-                val storeNames = response.data.map { it.name }
-                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeNames)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                binding.roomSpinner.adapter = adapter
+                if (response.data.isNotEmpty()) {
 
-                binding.roomSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-                        val selectedRoom = response.data[position]
-                        SpManager.saveInt(this@SelectLocationActivity, SpManager.KEY_ROOM_INDEX, selectedRoom.index)
-                        fetchSection(selectedRoom.index)
+                    binding.roomSpinner.visibility = View.VISIBLE
+                    binding.selectRoomTxt.visibility = View.VISIBLE
+                    binding.sectionSpinner.visibility = View.VISIBLE
+                    binding.selectSectionTxt.visibility = View.VISIBLE
+
+                    val storeNames = response.data.map { it.name }
+                    val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeNames)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.roomSpinner.adapter = adapter
+
+                    binding.roomSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                            val selectedRoom = response.data[position]
+                            SpManager.saveInt(this@SelectLocationActivity, SpManager.KEY_ROOM_INDEX, selectedRoom.index)
+                            fetchSection(selectedRoom.index)
+                        }
+
+                        override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                        }
+
                     }
-
-                    override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                    }
-
                 }
+                else {
+                    binding.roomSpinner.visibility = View.INVISIBLE
+                    binding.selectRoomTxt.visibility = View.INVISIBLE
+                    binding.sectionSpinner.visibility = View.INVISIBLE
+                    binding.selectSectionTxt.visibility = View.INVISIBLE
+                }
+
             },
             onFailed = {
                 it.toast()
@@ -104,22 +119,32 @@ class SelectLocationActivity : AppCompatActivity() {
     private fun fetchSection(roomIndex: Int) {
         viewModel.fetchSection(wireHouseId, roomIndex,
             onSuccess = { response ->
-                val storeNames = response.data.map { it.name }
-                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeNames)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                binding.sectionSpinner.adapter = adapter
+                if (response.data.isNotEmpty()) {
+                    binding.sectionSpinner.visibility = View.VISIBLE
+                    binding.selectSectionTxt.visibility = View.VISIBLE
 
-                binding.sectionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-                        val selectedSection = response.data[position]
-                        SpManager.saveInt(this@SelectLocationActivity, SpManager.KEY_SECTION_INDEX, selectedSection.index)
+                    val storeNames = response.data.map { it.name }
+                    val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeNames)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.sectionSpinner.adapter = adapter
+
+                    binding.sectionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                            val selectedSection = response.data[position]
+                            SpManager.saveInt(this@SelectLocationActivity, SpManager.KEY_SECTION_INDEX, selectedSection.index)
+                        }
+
+                        override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                        }
+
                     }
-
-                    override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                    }
-
                 }
+                else {
+                    binding.sectionSpinner.visibility = View.INVISIBLE
+                    binding.selectSectionTxt.visibility = View.INVISIBLE
+                }
+
             },
             onFailed = {
                 it.toast()

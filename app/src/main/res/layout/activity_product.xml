@@ -30,41 +30,43 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:text="barcode"
-                app:layout_constraintStart_toStartOf="@+id/iv_back"
-                app:layout_constraintTop_toBottomOf="@id/iv_back" />
-
-            <EditText
-                android:id="@+id/tvBarcode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/barcodeRegion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:fontFamily="@font/poppins_semibold"
-                android:gravity="center"
-                android:text="2401161553336"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="@id/tv_1"
+                android:layout_marginBottom="@dimen/_10sdp"
+                app:layout_constraintTop_toBottomOf="@id/iv_back">
 
-                app:layout_constraintEnd_toStartOf="@+id/ivSearchByQr"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tv_1"
-                 />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_barcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/etBarcode"
+                    app:layout_constraintTop_toTopOf="@+id/etBarcode"
+                    android:text="barcode"
+                    />
 
-            <ImageView
-                android:id="@+id/ivSearchByQr"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/ic_sign"
-                android:layout_marginEnd="@dimen/_5sdp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvBarcode"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tvBarcode" />
+                <EditText
+                    android:id="@+id/etBarcode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center"
+
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_barcode"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_barcode" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <LinearLayout
                 android:id="@+id/ll_top"
@@ -74,7 +76,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvBarcode">
+                app:layout_constraintTop_toBottomOf="@id/barcodeRegion">
 
                 <ImageView
                     android:id="@+id/ivProductImage"
@@ -154,15 +156,15 @@
                 app:layout_constraintTop_toBottomOf="@id/ll_top">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvAmount"
+                    android:id="@+id/tv_quentity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
                     android:layout_weight="1"
                     android:text="Quantity"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="@+id/etQuantity"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/etQuantity" />
 
                 <EditText
@@ -171,16 +173,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/_5sdp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:backgroundTint="@android:color/darker_gray"
+                    android:gravity="center"
+                    android:inputType="number|numberDecimal|numberSigned"
                     android:maxLines="1"
                     android:singleLine="true"
+                    android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:textSize="@dimen/_13sdp"
                     app:layout_constraintEnd_toStartOf="@+id/btn_ok"
-                    app:layout_constraintStart_toEndOf="@+id/tvAmount"
+                    app:layout_constraintStart_toEndOf="@+id/tv_quentity"
                     app:layout_constraintTop_toTopOf="parent"
-                    />
+                    tools:text="0" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/btn_ok"

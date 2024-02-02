@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_1"
+                android:id="@+id/tv_barcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -40,7 +40,7 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
             <EditText
-                android:id="@+id/tvBarcode"
+                android:id="@+id/etBarcode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
@@ -49,11 +49,11 @@
                 android:gravity="center"
                 tools:text="2401161553336"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="@id/tv_1"
+                app:layout_constraintBottom_toBottomOf="@id/tv_barcode"
 
                 app:layout_constraintEnd_toStartOf="@+id/ivSearchByQr"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/tv_1"
+                app:layout_constraintStart_toEndOf="@+id/tv_barcode"
                 />
 
             <ImageView
@@ -62,9 +62,9 @@
                 android:layout_height="@dimen/_30sdp"
                 android:src="@drawable/ic_sign"
                 android:layout_marginEnd="@dimen/_5sdp"
-                app:layout_constraintBottom_toBottomOf="@+id/tvBarcode"
+                app:layout_constraintBottom_toBottomOf="@+id/etBarcode"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tvBarcode" />
+                app:layout_constraintTop_toTopOf="@+id/etBarcode" />
 
             <LinearLayout
                 android:id="@+id/ll_top"
@@ -74,7 +74,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvBarcode">
+                app:layout_constraintTop_toBottomOf="@id/etBarcode">
 
                 <ImageView
                     android:id="@+id/ivProductImage"
@@ -157,7 +157,7 @@
                 app:layout_constraintTop_toBottomOf="@id/ll_top">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvAmount"
+                    android:id="@+id/tv_quentity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"

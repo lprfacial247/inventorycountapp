@@ -72,7 +72,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvQuantity"
-                android:layout_width="@dimen/_20sdp"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/_20sdp"
                 android:text="12"
                 android:textStyle="bold"

@@ -2,22 +2,25 @@ package com.example.inventorycountingapp.product
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Dialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.hardware.ScanDevice
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Vibrator
 import android.provider.Settings
-import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -33,12 +36,10 @@ import com.example.inventorycountingapp.common.dialog.NoProductDialog
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.common.toast
 import com.example.inventorycountingapp.databinding.ActivityProductBinding
-import com.example.inventorycountingapp.login.LoginViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textview.MaterialTextView
 import com.permissionx.guolindev.PermissionX
+
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
@@ -67,6 +68,26 @@ class ProductActivity : AppCompatActivity() {
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private var addImage: ImageView ?= null
 
+    private var mScanDevice: ScanDevice? = null
+    private var mmediaplayer: MediaPlayer? = null
+    private var mvibrator: Vibrator? = null
+
+    private val mScanDataReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            // TODO Auto-generated method stub
+            val action = intent.action
+            if (action == "ACTION_BAR_SCAN") {
+                val str = intent.getStringExtra("EXTRA_SCAN_DATA")
+                if (str != null) {
+                    mmediaplayer!!.start();
+                    mvibrator!!.vibrate(150)
+                    binding.etBarcode.setText(str)
+                    fetchProductInformation(str)
+                }
+
+            }
+        }
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +95,7 @@ class ProductActivity : AppCompatActivity() {
         binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setUpScanner()
         setupRv()
         initClicks()
         imageLauncher()
@@ -102,6 +124,14 @@ class ProductActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+
+    private fun setUpScanner() {
+        mScanDevice = ScanDevice(this) //初始化接口  Initialization interface
+        mvibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator // motor
+        mmediaplayer = MediaPlayer() //   Initialize sound
+        mmediaplayer = MediaPlayer.create(this, R.raw.scanok)
+        mmediaplayer!!.isLooping = false
     }
 
     private fun setupRv() {
@@ -145,31 +175,36 @@ class ProductActivity : AppCompatActivity() {
             super.onBackPressed()
         }
 
-        binding.ivSearchByQr.setOnClickListener {
-            val barCode = binding.tvBarcode.text.toString()
-            viewModel.getProduct(barCode,
-                onSuccess = {
-                    productResponse = it
-                    binding.apply {
-                        ivProductImage.load(it.data.imagePath)
-                        tvName.text = it.data.name
-                        tvQuantity.text = it.data.defaultQty +" pcs, "
-                        tvPricee.text = it.data.salePriceTax
-                        if (it.data.defaultQty.toDouble() == 0.0) {
-                            etQuantity.setText("1")
-                        }
-                        else {
-                            etQuantity.setText(it.data.defaultQty)
-                        }
+//        binding.ivSearchByQr.setOnClickListener {
+//            val barCode = binding.tvBarcode.text.toString()
+//            fetchProductInformation(barCode)
+//        }
+    }
 
+    private fun fetchProductInformation(barCode: String) {
+        viewModel.getProduct(
+            barCode,
+            onSuccess = {
+                productResponse = it
+                binding.apply {
+                    ivProductImage.load(it.data.imagePath)
+                    tvName.text = it.data.name
+                    tvQuantity.text = it.data.defaultQty + " pcs, "
+                    tvPricee.text = it.data.salePriceTax
+                    if (it.data.defaultQty.toDouble() == 0.0) {
+                        etQuantity.setText("1")
                     }
+                    else {
+                        etQuantity.setText(it.data.defaultQty)
+                    }
+                }
 
-                },
-                onFailed = {
-                    val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
-                    customDialog.show()
-                })
-        }
+            },
+            onFailed = {
+                val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
+                customDialog.show()
+//                it.toast()
+            })
     }
 
     private fun resetData() {
@@ -178,7 +213,7 @@ class ProductActivity : AppCompatActivity() {
         binding.tvPricee.text = ""
         binding.tvQuantity.text = ""
         binding.etQuantity.setText("0")
-        binding.tvBarcode.setText("")
+        binding.etBarcode.setText("")
         productResponse = null
     }
 
@@ -188,7 +223,7 @@ class ProductActivity : AppCompatActivity() {
 
         addImage = bottomSheetView.findViewById(R.id.iv_product)
         val tvName: TextView = bottomSheetView.findViewById(R.id.tvName)
-        val tvBarcode: TextView = bottomSheetView.findViewById(R.id.tvBarcode)
+        val tvBarcode: TextView = bottomSheetView.findViewById(R.id.etBarcode)
         val tvPrice: TextView = bottomSheetView.findViewById(R.id.tvPrice)
         val tvP: TextView = bottomSheetView.findViewById(R.id.tvP)
         val btnSave: MaterialButton = bottomSheetView.findViewById(R.id.btnSave)
@@ -298,4 +333,35 @@ class ProductActivity : AppCompatActivity() {
         dialog.setContentView(bottomSheetView)
         dialog.show()
     }
+
+
+    override fun onPause() {
+        // TODO Auto-generated method stub
+        super.onPause()
+        if (mScanDevice != null) {
+            mScanDevice!!.stopScan()
+        }
+        unregisterReceiver(mScanDataReceiver)
+    }
+
+
+    // Registered Data Broadcasting
+    override fun onResume() {
+        // TODO Auto-generated method stub
+        val scanDataIntentFilter = IntentFilter()
+        scanDataIntentFilter.addAction("ACTION_BAR_SCAN")
+        registerReceiver(mScanDataReceiver, scanDataIntentFilter)
+        super.onResume()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mScanDevice != null) {
+            mScanDevice!!.closeScan()
+            mScanDevice = null
+            mmediaplayer!!.release()
+        }
+    }
+
 }

@@ -42,8 +42,8 @@ class ProfileScreen : AppCompatActivity() {
                 .into(ivProfile)
             tvUserName.text = user.userName
             tvName.text = user.userName
-            tvDate.text = user.lstVisitDateTo
-            tvJoiningDate.text = "From "+ user.lstVisitDateFrom
+            tvToDate.text = "To   " + user.lstVisitDateTo
+            tvFromDate.text = "From "+ user.lstVisitDateFrom
         }
     }
 }

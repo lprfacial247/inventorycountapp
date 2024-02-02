@@ -57,12 +57,13 @@ If there is no location information in the list.\nyou can manually enter a new l
         android:id="@+id/selectLevelFloorTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="@dimen/_17sdp"
+
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
         android:paddingStart="10dp"
         android:text="Level/Floor"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,16 +95,16 @@ If there is no location information in the list.\nyou can manually enter a new l
         android:id="@+id/selectRoomTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="25dp"
-        android:textSize="@dimen/_17sdp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:paddingStart="10dp"
         android:text="Room"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/roomSpinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/roomSpinner"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
 
 
@@ -130,16 +131,16 @@ If there is no location information in the list.\nyou can manually enter a new l
         android:id="@+id/selectSectionTxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="25dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="20dp"
         android:paddingStart="10dp"
         android:text="Section"
-        android:textSize="@dimen/_17sdp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/sectionSpinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/roomSpinner"
-        app:layout_constraintBottom_toTopOf="@id/sectionSpinner"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/roomSpinner" />
 
 
 

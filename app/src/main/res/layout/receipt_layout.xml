@@ -31,7 +31,7 @@
             app:layout_constraintTop_toBottomOf="@id/ll_top">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_1"
+                android:id="@+id/tv_barcode"
                 android:layout_width="@dimen/_110sdp"
                 android:layout_height="wrap_content"
                 android:text="Name"
@@ -70,7 +70,7 @@
                 app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvBarcode"
+                android:id="@+id/etBarcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="84975834657834"

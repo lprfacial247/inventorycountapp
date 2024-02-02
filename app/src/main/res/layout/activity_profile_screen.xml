@@ -23,8 +23,10 @@
         android:id="@+id/iv_Profile"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         tools:src="@drawable/ic_profile"
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        app:cornerFamily="rounded"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_back" />
@@ -47,24 +49,34 @@
         android:layout_height="wrap_content"
         android:text="Product Manager"
         android:layout_marginTop="5dp"
+        android:textColor="@color/profileColor"
         android:fontFamily="@font/poppins_semibold"
         app:layout_constraintEnd_toEndOf="@+id/tvUserName"
         app:layout_constraintStart_toStartOf="@+id/tvUserName"
         app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/materialCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        app:cardCornerRadius="5dp"
+        app:contentPaddingLeft="@dimen/_20sdp"
+        app:contentPaddingRight="@dimen/_20sdp"
+        app:contentPaddingTop="@dimen/_5sdp"
+        app:contentPaddingBottom="@dimen/_5sdp"
+        app:cardElevation="@dimen/_10sdp"
+        app:cardBackgroundColor="@color/white"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="202dp">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/materialTextView3"
@@ -93,8 +105,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="Alex Romanenko"
                 android:fontFamily="@font/poppins_medium"
+                android:text="Alex Romanenko"
+                android:textColor="@color/profileColor"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView2"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toTopOf="@+id/imageView2" />
@@ -115,6 +128,7 @@
                 android:layout_marginStart="10dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Main Store"
+                android:textColor="@color/profileColor"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toTopOf="@+id/imageView3" />
@@ -129,12 +143,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvDate"
+                android:id="@+id/tvFromDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="2023/12/12"
                 android:fontFamily="@font/poppins_medium"
+                android:text="From 2023/12/12"
+                android:textColor="@color/profileColor"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView4"
                 app:layout_constraintStart_toEndOf="@+id/imageView4"
                 app:layout_constraintTop_toTopOf="@+id/imageView4" />
@@ -148,61 +163,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvJoiningDate"
+                android:id="@+id/tvToDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="From 2022 To 2023"
                 android:fontFamily="@font/poppins_medium"
+                android:text="To 2022 To 2023"
+                android:textColor="@color/profileColor"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView5"
                 app:layout_constraintStart_toEndOf="@+id/imageView5"
                 app:layout_constraintTop_toTopOf="@+id/imageView5" />
 
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/imageView5"
-                app:layout_constraintTop_toBottomOf="@+id/imageView5">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Confirmed By Administrator"
-                    android:fontFamily="@font/poppins_medium"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                    app:layout_constraintStart_toEndOf="@+id/imageView5"
-                    app:layout_constraintTop_toTopOf="@+id/imageView5" />
-
-                <ImageView
-                    android:layout_width="@dimen/_10sdp"
-                    android:layout_height="@dimen/_10sdp"
-                    android:src="@drawable/success"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_3sdp"
-                    android:textColor="@color/black"
-                    android:textSize="18dp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvConfirmedDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="2023-12-12"
-                    android:fontFamily="@font/poppins_medium"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                    app:layout_constraintStart_toEndOf="@+id/imageView5"
-                    app:layout_constraintTop_toTopOf="@+id/imageView5" />
-
-
-            </LinearLayout>
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnStartInventory"

@@ -126,7 +126,7 @@ class ProductWithAllScanning : AppCompatActivity() {
 
         val addImage: ImageView = bottomSheetView.findViewById(R.id.iv_product)
         val tvName: TextView = bottomSheetView.findViewById(R.id.tvName)
-        val tvBarcode: TextView = bottomSheetView.findViewById(R.id.tvBarcode)
+        val tvBarcode: TextView = bottomSheetView.findViewById(R.id.etBarcode)
         val tvPrice: TextView = bottomSheetView.findViewById(R.id.tvPrice)
         val tvP: TextView = bottomSheetView.findViewById(R.id.tvP)
         val btnSave: MaterialButton = bottomSheetView.findViewById(R.id.btnSave)

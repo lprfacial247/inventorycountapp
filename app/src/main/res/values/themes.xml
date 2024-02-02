@@ -8,5 +8,10 @@
 
     <style name="Theme.InventoryCountingApp" parent="Base.Theme.InventoryCountingApp" />
 
+    <style name="circleImageView">
+        <item name="cornerSize">50%</item>
+    </style>
+
+
 
 </resources>
