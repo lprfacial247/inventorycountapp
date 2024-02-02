@@ -109,7 +109,6 @@ class ProductWithAllScanning : AppCompatActivity() {
                     else {
                         "No product found".toast()
                     }
-
                 },
                 onFailed = {
                     val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
