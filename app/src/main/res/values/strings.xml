@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">InventoryCountingApp</string>
-<!--    <string name="base_url">http://88.99.62.137:5000/</string>-->
-    <string name="base_url">http://192.168.106.147:59753/</string>
+    <string name="base_url">http://88.99.62.137:5000/</string>
+<!--    <string name="base_url">http://192.168.106.147:59753/</string>-->
 
 
     <string-array name="StoreList">

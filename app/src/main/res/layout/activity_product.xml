@@ -59,7 +59,6 @@
                     android:layout_marginEnd="20dp"
                     android:fontFamily="@font/poppins_semibold"
                     android:gravity="center"
-
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@id/tv_barcode"
                     app:layout_constraintEnd_toEndOf="parent"

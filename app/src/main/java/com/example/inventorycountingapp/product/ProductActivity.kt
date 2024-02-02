@@ -93,7 +93,7 @@ class ProductActivity : AppCompatActivity() {
         binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setUpScanner()
+        //setUpScanner()
         setupRv()
         initClicks()
         imageLauncher()
@@ -201,7 +201,6 @@ class ProductActivity : AppCompatActivity() {
             onFailed = {
                 val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
                 customDialog.show()
-//                it.toast()
             })
     }
 
