@@ -42,9 +42,7 @@ import com.permissionx.guolindev.PermissionX
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
-    private val REQUEST_PICK_IMAGE = 1
     private val REQUEST_PERMISSION_SETTINGS = 1001
-    var PICK_IMAGE: Int = 111
     private val viewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
     private var productResponse : ProductResponse ?= null
     private val adapter by lazy { SelectedProductAdapter() }
