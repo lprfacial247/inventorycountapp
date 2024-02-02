@@ -103,6 +103,7 @@ class ProductWithAllScanning : AppCompatActivity() {
                             viewModel.selectedList.add(productResponse!!.data)
                         }
 
+                        viewModel.selectedList.reverse()
                         adapter.setData(viewModel.selectedList)
                         adapter.notifyDataSetChanged()
                     }

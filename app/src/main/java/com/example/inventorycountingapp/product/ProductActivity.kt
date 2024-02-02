@@ -102,7 +102,7 @@ class ProductActivity : AppCompatActivity() {
         binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //setUpScanner()
+        setUpScanner()
         setupRv()
         initClicks()
         imageLauncher()
