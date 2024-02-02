@@ -10,10 +10,14 @@ data class WirehouseResponse(
     val status: String
 ) {
     data class Data(
-        @SerializedName("address")
-        val address: String,
+        @SerializedName("building")
+        val building: String,
         @SerializedName("cash")
         val cash: String,
+        @SerializedName("city")
+        val city: String,
+        @SerializedName("country")
+        val country: String,
         @SerializedName("created_at")
         val createdAt: String,
         @SerializedName("index")
@@ -24,13 +28,13 @@ data class WirehouseResponse(
         val name: String,
         @SerializedName("owner")
         val owner: String,
-        @SerializedName("postal")
-        val postal: String,
         @SerializedName("state")
         val state: String,
+        @SerializedName("street")
+        val street: String,
         @SerializedName("updated_at")
         val updatedAt: String,
-        @SerializedName("zip")
-        val zip: String
+        @SerializedName("zipcode")
+        val zipcode: String
     )
 }

@@ -66,7 +66,7 @@ dependencies {
     releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:3.5.2")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
-    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+    implementation ("com.google.android.gms:play-services-maps:17.0.1")
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(files("libs/ScanDevice.jar"))
