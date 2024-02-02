@@ -32,6 +32,7 @@ import com.example.inventorycountingapp.CameraActivity
 import com.example.inventorycountingapp.ProfileScreen
 import com.example.inventorycountingapp.R
 import com.example.inventorycountingapp.SubmittedSuccessfully
+import com.example.inventorycountingapp.common.dialog.Loader
 import com.example.inventorycountingapp.common.dialog.NoProductDialog
 import com.example.inventorycountingapp.common.load
 import com.example.inventorycountingapp.common.toast
@@ -39,14 +40,22 @@ import com.example.inventorycountingapp.databinding.ActivityProductBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.permissionx.guolindev.PermissionX
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 
 class ProductActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductBinding
     private val REQUEST_PERMISSION_SETTINGS = 1001
     private val viewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
-    private var productResponse : ProductResponse ?= null
+    private var productResponse: ProductResponse? = null
     private val adapter by lazy { SelectedProductAdapter() }
+    private val loader by lazy { Loader(this) }
 
 
     private val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -64,7 +73,7 @@ class ProductActivity : AppCompatActivity() {
 
     private lateinit var cameraActivityLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
-    private var addImage: ImageView ?= null
+    private var addImage: ImageView? = null
 
     private var mScanDevice: ScanDevice? = null
     private var mmediaplayer: MediaPlayer? = null
@@ -107,6 +116,7 @@ class ProductActivity : AppCompatActivity() {
                     val imageUri = data?.getStringExtra("image_uri")
                     if (addImage != null && imageUri != null) {
                         addImage?.load(imageUri)
+                        addImage?.tag = imageUri
                     }
 
                 }
@@ -119,6 +129,7 @@ class ProductActivity : AppCompatActivity() {
                     val selectedImageUri: Uri? = data?.data
                     if (addImage != null && selectedImageUri != null) {
                         addImage?.load(selectedImageUri)
+                        addImage?.tag = selectedImageUri
                     }
                 }
             }
@@ -153,7 +164,7 @@ class ProductActivity : AppCompatActivity() {
 
             val tempList: MutableList<ProductResponse.Data> = ArrayList()
             for (item in viewModel.selectedList) {
-                if (item.barcode !=  inputBarCode) {
+                if (item.barcode != inputBarCode) {
                     tempList.add(item)
                 }
             }
@@ -173,10 +184,10 @@ class ProductActivity : AppCompatActivity() {
             super.onBackPressed()
         }
 
-//        binding.ivSearchByQr.setOnClickListener {
-//            val barCode = binding.tvBarcode.text.toString()
-//            fetchProductInformation(barCode)
-//        }
+        binding.ivSearchByQr.setOnClickListener {
+            val barCode = binding.etBarcode.text.toString()
+            fetchProductInformation(barCode)
+        }
     }
 
     private fun fetchProductInformation(barCode: String) {
@@ -191,8 +202,7 @@ class ProductActivity : AppCompatActivity() {
                     tvPricee.text = it.data.salePriceTax
                     if (it.data.defaultQty.toDouble() == 0.0) {
                         etQuantity.setText("1")
-                    }
-                    else {
+                    } else {
                         etQuantity.setText(it.data.defaultQty)
                     }
                 }
@@ -232,7 +242,27 @@ class ProductActivity : AppCompatActivity() {
         tvP.text = item.saleUnitIdx.toString()
 
         btnSave.setOnClickListener {
-            bottomSheetDialog.dismiss()
+            loader.showLoader()
+            val productIdx = item.index.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            val fileName = item.name.toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val file = File(addImage?.tag.toString().replace("file:", ""))
+            val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val imagePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+            viewModel.updateProductImage(productIdx, fileName, imagePart,
+                onSuccess = {
+                    loader.hideLoader()
+                    bottomSheetDialog.dismiss()
+                    it.toast()
+                },
+                onFailed = {
+                    loader.hideLoader()
+                    it.toast()
+                }
+            )
+
+
         }
         addImage?.setOnClickListener {
             cameraDialog()

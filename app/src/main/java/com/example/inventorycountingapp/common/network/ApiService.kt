@@ -5,8 +5,11 @@ import com.example.inventorycountingapp.location.FloorResponse
 import com.example.inventorycountingapp.location.RoomResponse
 import com.example.inventorycountingapp.location.SectionResponse
 import com.example.inventorycountingapp.login.LoginResponse
+import com.example.inventorycountingapp.product.ApiResponse
 import com.example.inventorycountingapp.product.ProductResponse
 import com.example.inventorycountingapp.wirehouse.WirehouseResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -49,5 +52,13 @@ interface ApiService {
         @Field("whouse_idx") wireHouseIndex: Int,
         @Field("room_idx") roomIndex: Int,
     ): Call<SectionResponse>
+
+    @Multipart
+    @POST("api-update-product-image")
+    fun updateProductImage(
+        @Part("product_idx") productIdx: RequestBody,
+        @Part("file_name") fileName: RequestBody,
+        @Part file: MultipartBody.Part
+    ): Call<ApiResponse>
 
 }

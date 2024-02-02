@@ -59,10 +59,21 @@
                     android:layout_marginEnd="20dp"
                     android:fontFamily="@font/poppins_semibold"
                     android:gravity="center"
+                    android:text="2401161553336"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@id/tv_barcode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_barcode" />
+
+                <ImageView
+                    android:id="@+id/ivSearchByQr"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:src="@drawable/ic_sign"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    app:layout_constraintBottom_toBottomOf="@+id/etBarcode"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/etBarcode" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
