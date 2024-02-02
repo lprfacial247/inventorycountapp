@@ -3,13 +3,19 @@ package com.example.inventorycountingapp.product
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.hardware.ScanDevice
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Vibrator
 import android.provider.Settings
 import android.view.Window
 import android.view.WindowManager
@@ -37,8 +43,6 @@ class ProductWithAllScanning : AppCompatActivity() {
     private val viewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
     private val adapter by lazy { SelectedProductAdapter() }
     lateinit var submit: MaterialButton
-    lateinit var btnBack: ImageView
-    private val REQUEST_PICK_IMAGE = 1
     private val REQUEST_PERMISSION_SETTINGS = 1001
     var PICK_IMAGE: Int = 111
     private val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -54,7 +58,36 @@ class ProductWithAllScanning : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
+    private var mScanDevice: ScanDevice? = null
+    private var mmediaplayer: MediaPlayer? = null
+    private var mvibrator: Vibrator? = null
+
     private var productResponse : ProductResponse ?= null
+
+    private val mScanDataReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            // TODO Auto-generated method stub
+            val action = intent.action
+            if (action == "ACTION_BAR_SCAN") {
+                val str = intent.getStringExtra("EXTRA_SCAN_DATA")
+                if (str != null) {
+                    mmediaplayer!!.start();
+                    mvibrator!!.vibrate(150)
+                    binding.etBarcode.setText(str)
+                    fetchProductInformation(str)
+                }
+                else{
+                    resetData()
+                }
+
+            }
+        }
+    }
+
+    private fun resetData() {
+        binding.etBarcode.setText("")
+        productResponse = null
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,59 +96,69 @@ class ProductWithAllScanning : AppCompatActivity() {
         setContentView(binding.root)
 
         submit = findViewById(R.id.btnSubmit)
-        btnBack = findViewById(R.id.iv_back)
 
         setupRv()
-
+        setUpScanner()
 
         submit.setOnClickListener {
             val intent = Intent(this, SubmittedSuccessfully::class.java)
             startActivity(intent)
         }
 
-        btnBack.setOnClickListener {
-            super.onBackPressed()
-        }
+    }
 
-        binding.ivSearchByQr.setOnClickListener {
-            val barCode = binding.etBarcode.text.toString()
-            viewModel.getProduct(barCode,
-                onSuccess = {
-                    productResponse = it
-                    if (productResponse != null) {
-                        binding.apply {
-                            ivProductImage.load(it.data.imagePath)
-                            tvName.text = it.data.name
-                            tvQuantity.text = it.data.defaultQty + " pcs, "
-                            tvPricee.text = it.data.salePriceTax
-                        }
+    private fun fetchProductInformation(barCode: String) {
+        viewModel.getProduct(barCode,
+            onSuccess = {
+                productResponse = it
+
+                if (productResponse == null) {
+                    "No product found".toast()
+                }
+
+                val inputBarCode = binding.tvBarcode.text.toString()
+                val existingItem = viewModel.selectedList.find { it.barcode == barCode }
+
+                if (existingItem != null) {
+                    // Item with the same barcode already exists, increase the default quantity
+                    existingItem.defaultQty = (existingItem.defaultQty.toDouble() + 1).toString()
+                } else {
+                    // Item with the same barcode not found, add the new item to the list
+                    viewModel.selectedList.add(productResponse!!.data)
+                }
+
+                // Update the adapter with the modified or new list
+                adapter.setData(viewModel.selectedList)
+                adapter.notifyDataSetChanged()
 
 
-                        if (productResponse!!.data.defaultQty.toDouble() == 0.0) {
-                            productResponse!!.data.defaultQty = "1"
-                        }
+                /*               val tempList: MutableList<ProductResponse.Data> = ArrayList()
+                               for (item in viewModel.selectedList) {
+                                   if (item.barcode !=  inputBarCode) {
+                                       tempList.add(item)
+                                   }
+                               }
+                               tempList.add(productResponse!!.data)
+                               viewModel.selectedList.clear()
+                               viewModel.selectedList.addAll(tempList)
+                               adapter.setData(viewModel.selectedList)*/
 
-                        val existingItem = viewModel.selectedList.find { it.barcode == barCode }
+            },
+            onFailed = {
 
-                        if (existingItem != null) {
-                            existingItem.defaultQty = (existingItem.defaultQty.toDouble() + 1).toString()
-                        } else {
-                            viewModel.selectedList.add(productResponse!!.data)
-                        }
+                val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
+                customDialog.show()
+                resetData()
+            })
 
-                        adapter.setData(viewModel.selectedList)
-                        adapter.notifyDataSetChanged()
-                    }
-                    else {
-                        "No product found".toast()
-                    }
+    }
 
-                },
-                onFailed = {
-                    val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
-                    customDialog.show()
-                })
-        }
+    private fun setUpScanner() {
+        mScanDevice = ScanDevice(this) // Initialization interface
+        mvibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator // motor
+        mmediaplayer = MediaPlayer() //   Initialize sound
+        mmediaplayer = MediaPlayer.create(this, R.raw.scanok)
+        mmediaplayer!!.isLooping = false
     }
 
     private fun setupRv() {
@@ -163,7 +206,7 @@ class ProductWithAllScanning : AppCompatActivity() {
         val fromCamera: MaterialButton = bottomSheetView.findViewById(R.id.fromCamera)
 
         fromLaibrary.setOnClickListener {
-            val intent = Intent()
+            var intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_PICK
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE)
@@ -235,5 +278,34 @@ class ProductWithAllScanning : AppCompatActivity() {
         val bottomSheetView = layoutInflater.inflate(R.layout.temp_dailog, null)
         dialog.setContentView(bottomSheetView)
         dialog.show()
+    }
+
+    override fun onPause() {
+        // TODO Auto-generated method stub
+        super.onPause()
+        if (mScanDevice != null) {
+            mScanDevice!!.stopScan()
+        }
+        unregisterReceiver(mScanDataReceiver)
+    }
+
+
+    // Registered Data Broadcasting
+    override fun onResume() {
+        // TODO Auto-generated method stub
+        val scanDataIntentFilter = IntentFilter()
+        scanDataIntentFilter.addAction("ACTION_BAR_SCAN")
+        registerReceiver(mScanDataReceiver, scanDataIntentFilter)
+        super.onResume()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mScanDevice != null) {
+            mScanDevice!!.closeScan()
+            mScanDevice = null
+            mmediaplayer!!.release()
+        }
     }
 }

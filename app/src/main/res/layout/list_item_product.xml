@@ -9,7 +9,10 @@
         android:id="@+id/cv_itemDoc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_2sdp"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
         android:elevation="@dimen/_4sdp"
         app:cardCornerRadius="@dimen/_4sdp"
         app:contentPadding="@dimen/_8sdp"
@@ -23,11 +26,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivProductImage"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginStart="10dp"
                 android:src="@drawable/ic_sprite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -35,9 +39,9 @@
 
             <TextView
                 android:id="@+id/tvName"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginStart="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="Sprite Can"
@@ -63,8 +67,8 @@
                 android:id="@+id/tvPricee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price"
                 android:layout_marginStart="@dimen/_15sdp"
+                android:text="Price"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@+id/textDocsFilesSize"
                 app:layout_constraintStart_toEndOf="@+id/textDocsFilesSize"
@@ -74,6 +78,7 @@
                 android:id="@+id/tvQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_20sdp"
+                android:layout_marginEnd="20dp"
                 android:text="12"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -85,13 +90,12 @@
                 android:id="@+id/bottomBorder"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toBottomOf="@+id/textDocsFilesSize"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginHorizontal="@dimen/_5sdp"
-                />
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textDocsFilesSize" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 

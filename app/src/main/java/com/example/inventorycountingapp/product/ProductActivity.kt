@@ -102,7 +102,7 @@ class ProductActivity : AppCompatActivity() {
         binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //setUpScanner()
+        setUpScanner()
         setupRv()
         initClicks()
         imageLauncher()
@@ -179,15 +179,10 @@ class ProductActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-        binding.ivBack.setOnClickListener {
-            super.onBackPressed()
-        }
-
-        binding.ivSearchByQr.setOnClickListener {
-            val barCode = binding.etBarcode.text.toString()
-            fetchProductInformation(barCode)
-        }
+//        binding.ivSearchByQr.setOnClickListener {
+//            val barCode = binding.tvBarcode.text.toString()
+//            fetchProductInformation(barCode)
+//        }
     }
 
     private fun fetchProductInformation(barCode: String) {
@@ -202,7 +197,8 @@ class ProductActivity : AppCompatActivity() {
                     tvPricee.text = it.data.salePriceTax
                     if (it.data.defaultQty.toDouble() == 0.0) {
                         etQuantity.setText("1")
-                    } else {
+                    }
+                    else {
                         etQuantity.setText(it.data.defaultQty)
                     }
                 }
@@ -211,6 +207,7 @@ class ProductActivity : AppCompatActivity() {
             onFailed = {
                 val customDialog = NoProductDialog(this, "Oops!  No Product!", barCode, it)
                 customDialog.show()
+                resetData()
             })
     }
 
