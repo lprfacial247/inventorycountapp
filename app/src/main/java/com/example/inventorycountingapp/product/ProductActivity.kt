@@ -171,6 +171,7 @@ class ProductActivity : AppCompatActivity() {
             tempList.add(productResponse!!.data)
             viewModel.selectedList.clear()
             viewModel.selectedList.addAll(tempList)
+            viewModel.selectedList.reverse()
             adapter.setData(viewModel.selectedList)
             resetData()
         }
