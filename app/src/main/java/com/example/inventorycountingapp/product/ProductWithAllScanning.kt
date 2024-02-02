@@ -99,7 +99,7 @@ class ProductWithAllScanning : AppCompatActivity() {
         submit = findViewById(R.id.btnSubmit)
 
         setupRv()
-//        setUpScanner()
+        setUpScanner()
 
         submit.setOnClickListener {
             val intent = Intent(this, SubmittedSuccessfully::class.java)
