@@ -82,43 +82,33 @@ class ProductWithAllScanning : AppCompatActivity() {
             viewModel.getProduct(barCode,
                 onSuccess = {
                     productResponse = it
-                    binding.apply {
-                        ivProductImage.load(it.data.imagePath)
-                        tvName.text = it.data.name
-                        tvQuantity.text = it.data.defaultQty + " pcs, "
-                        tvPricee.text = it.data.salePriceTax
-                    }
+                    if (productResponse != null) {
+                        binding.apply {
+                            ivProductImage.load(it.data.imagePath)
+                            tvName.text = it.data.name
+                            tvQuantity.text = it.data.defaultQty + " pcs, "
+                            tvPricee.text = it.data.salePriceTax
+                        }
 
-                    if (productResponse == null) {
+
+                        if (productResponse!!.data.defaultQty.toDouble() == 0.0) {
+                            productResponse!!.data.defaultQty = "1"
+                        }
+
+                        val existingItem = viewModel.selectedList.find { it.barcode == barCode }
+
+                        if (existingItem != null) {
+                            existingItem.defaultQty = (existingItem.defaultQty.toDouble() + 1).toString()
+                        } else {
+                            viewModel.selectedList.add(productResponse!!.data)
+                        }
+
+                        adapter.setData(viewModel.selectedList)
+                        adapter.notifyDataSetChanged()
+                    }
+                    else {
                         "No product found".toast()
                     }
-
-                    val inputBarCode = binding.tvBarcode.text.toString()
-                    val existingItem = viewModel.selectedList.find { it.barcode == barCode }
-
-                    if (existingItem != null) {
-                        // Item with the same barcode already exists, increase the default quantity
-                        existingItem.defaultQty = (existingItem.defaultQty.toDouble() + 1).toString()
-                    } else {
-                        // Item with the same barcode not found, add the new item to the list
-                        viewModel.selectedList.add(productResponse!!.data)
-                    }
-
-                    // Update the adapter with the modified or new list
-                    adapter.setData(viewModel.selectedList)
-                    adapter.notifyDataSetChanged()
-
-
-     /*               val tempList: MutableList<ProductResponse.Data> = ArrayList()
-                    for (item in viewModel.selectedList) {
-                        if (item.barcode !=  inputBarCode) {
-                            tempList.add(item)
-                        }
-                    }
-                    tempList.add(productResponse!!.data)
-                    viewModel.selectedList.clear()
-                    viewModel.selectedList.addAll(tempList)
-                    adapter.setData(viewModel.selectedList)*/
 
                 },
                 onFailed = {
@@ -173,7 +163,7 @@ class ProductWithAllScanning : AppCompatActivity() {
         val fromCamera: MaterialButton = bottomSheetView.findViewById(R.id.fromCamera)
 
         fromLaibrary.setOnClickListener {
-            var intent = Intent()
+            val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_PICK
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE)
