@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.lang.Exception
 
 
 class WareHouseActivity : AppCompatActivity() {
@@ -70,49 +71,67 @@ class WareHouseActivity : AppCompatActivity() {
     private fun fetchData() {
         viewModel.fetchWireHouse(
             onSuccess = { response ->
-                val storeNames = response.data.map { it.name }
-                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeNames)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                binding.spinner.adapter = adapter
+                setUpSpinner(response)
+                setMarkerOnMap(response)
 
-                binding.spinner.onItemSelectedListener =
-                    object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(
-                            p0: AdapterView<*>?,
-                            p1: View?,
-                            position: Int,
-                            p3: Long
-                        ) {
-                            val selectedWirehouse = response.data[position]
-                            SpManager.saveInt(this@WareHouseActivity, SpManager.KEY_WIRE_HOUSE_INDEX, selectedWirehouse.index)
-                        }
-
-                        override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                        }
-
-                    }
-
-                var location: LatLng ?= null
-                for (item in response.data) {
-                    val geocoder = Geocoder(this)
-                    val fullAddress = "${item.building} ${item.street}, ${item.city}, ${item.state}, ${item.zipcode}, ${item.country}"
-                    val addressList = geocoder.getFromLocationName(fullAddress, 1)
-                    if (!addressList.isNullOrEmpty()) {
-                        location = LatLng(addressList[0].latitude, addressList[0].longitude)
-                        val marker = mGoogleMap?.addMarker(MarkerOptions().position(location).title(item.name))
-                        marker?.tag = item
-                    }
-                }
-
-                if (location != null) {
-                    val cameraPosition = CameraPosition.Builder().target(location).zoom(12.0f).build()
-                    mGoogleMap?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-                }
 
             },
             onFailed = {
                 it.toast()
             })
+    }
+
+    private fun setUpSpinner(response: WirehouseResponse) {
+        val storeNames = response.data.map { it.name }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, storeNames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinner.adapter = adapter
+
+        binding.spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
+                    val selectedWirehouse = response.data[position]
+                    SpManager.saveInt(
+                        this@WareHouseActivity,
+                        SpManager.KEY_WIRE_HOUSE_INDEX,
+                        selectedWirehouse.index
+                    )
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+
+            }
+    }
+
+    private fun setMarkerOnMap(response: WirehouseResponse) {
+        try {
+            var location: LatLng? = null
+            for (item in response.data) {
+                val geocoder = Geocoder(this)
+                val fullAddress =
+                    "${item.building} ${item.street}, ${item.city}, ${item.state}, ${item.zipcode}, ${item.country}"
+                val addressList = geocoder.getFromLocationName(fullAddress, 1)
+                if (!addressList.isNullOrEmpty()) {
+                    location = LatLng(addressList[0].latitude, addressList[0].longitude)
+                    val marker =
+                        mGoogleMap?.addMarker(MarkerOptions().position(location).title(item.name))
+                    marker?.tag = item
+                }
+            }
+
+            if (location != null) {
+                val cameraPosition = CameraPosition.Builder().target(location).zoom(12.0f).build()
+                mGoogleMap?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
