@@ -29,13 +29,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.inventorycountingapp.CameraActivity
 import com.example.inventorycountingapp.R
 import com.example.inventorycountingapp.SubmittedSuccessfully
+import com.example.inventorycountingapp.common.DeviceUtils
+import com.example.inventorycountingapp.common.convertToTransformedList
+import com.example.inventorycountingapp.common.dialog.Loader
 import com.example.inventorycountingapp.common.dialog.NoProductDialog
 import com.example.inventorycountingapp.common.dialog.ProductDeleteDialog
 import com.example.inventorycountingapp.common.load
+import com.example.inventorycountingapp.common.pref.SpManager
 import com.example.inventorycountingapp.common.toast
 import com.example.inventorycountingapp.databinding.ActivityProductWithAllScanningBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
+import com.google.gson.Gson
 import com.permissionx.guolindev.PermissionX
 
 
@@ -43,7 +48,6 @@ class ProductWithAllScanning : AppCompatActivity() {
     private lateinit var binding: ActivityProductWithAllScanningBinding
     private val viewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
     private val adapter by lazy { SelectedProductAdapter() }
-    lateinit var submit: MaterialButton
     private val REQUEST_PERMISSION_SETTINGS = 1001
     var PICK_IMAGE: Int = 111
     private val readImagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -59,6 +63,7 @@ class ProductWithAllScanning : AppCompatActivity() {
         Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
+    private val loader by lazy { Loader(this) }
     private var mScanDevice: ScanDevice? = null
     private var mmediaplayer: MediaPlayer? = null
     private var mvibrator: Vibrator? = null
@@ -96,14 +101,38 @@ class ProductWithAllScanning : AppCompatActivity() {
         binding = ActivityProductWithAllScanningBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        submit = findViewById(R.id.btnSubmit)
-
         setupRv()
         setUpScanner()
 
-        submit.setOnClickListener {
-            val intent = Intent(this, SubmittedSuccessfully::class.java)
-            startActivity(intent)
+        binding.btnSubmit.setOnClickListener {
+            if (viewModel.selectedList.isEmpty()) {
+                "Nothing selected".toast()
+                return@setOnClickListener
+            }
+
+            loader.showLoader()
+
+            val user = SpManager.getUser(this)
+            val wireHouseId = SpManager.getInt(this, SpManager.KEY_WIRE_HOUSE_INDEX, 0)
+            val floorId = SpManager.getInt(this, SpManager.KEY_FLOOR_INDEX, 0)
+            val roomId = SpManager.getInt(this, SpManager.KEY_ROOM_INDEX, 0)
+            val sectionId = SpManager.getInt(this, SpManager.KEY_SECTION_INDEX, 0)
+            val deviceToken = DeviceUtils.getDeviceIMEI(this)
+            val listToSubmit = convertToTransformedList(viewModel.selectedList)
+
+            viewModel.submitScanningResult(user.userIdx, wireHouseId, floorId, roomId, sectionId, deviceToken,
+                Gson().toJson(listToSubmit),
+                onSuccess = {
+                    loader.hideLoader()
+                    val intent = Intent(this, SubmittedSuccessfully::class.java)
+                    startActivity(intent)
+                    finish()
+                },
+                onFailed = {
+                    it.toast()
+                    loader.hideLoader()
+                })
+
         }
 
         binding.ivSearchByQr.setOnClickListener {
